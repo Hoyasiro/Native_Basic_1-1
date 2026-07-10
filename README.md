@@ -226,9 +226,9 @@ Case C | 복합 (다중 조건 + 긴 맥락)
 초안을 읽어보시고 수정이 필요한 부분이나 추가하고 싶은 내용이 있다면 언제든 말씀해 주세요! 응원합니다.
 ```
         
-        속도: 6.8 ms <img width="678" height="36" alt="image" src="https://github.com/user-attachments/assets/978e8fc0-d2b9-4a76-ab68-59084e0e63f9" />
+        속도: 6.8 ms
 
-        토큰: 1,565 <img width="90" height="26" alt="image" src="https://github.com/user-attachments/assets/b6056506-f60b-4e62-8390-6be1365800da" />
+        토큰: 1,565
 
 
 
