@@ -4,120 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>네이토 사전평가 결과</title>
-    <!-- 화면이 훨씬 깔끔하고 보기 좋게 프리텐다드 폰트를 연결해 둘게요 -->
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
-        /* 화면 전체적인 기본 배경과 스타일링 */
+        /* 화면 중앙 정렬 및 배경 스타일 기본값 정의 */
         body {
-            margin: 0;
-            padding: 40px 20px;
             background-color: #f8f9fa;
-            font-family: "Pretendard Variable", Pretendard, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            box-sizing: border-box;
         }
-
-        /* 홈페이지에서 따온 모달 창이 화면 중앙에 이쁘게 잡히도록 감싸는 틀 */
+        
+        /* 모달 창이 부드럽고 가독성 있게 보이도록 보정 */
         .modal-content.large {
             background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            width: 100%;
             max-width: 800px;
-            overflow: hidden;
+            width: 100%;
             border: 1px solid #e0e0e0;
+            overflow: hidden;
+            box-sizing: border-box;
         }
-
-        /* 상단 타이틀 영역 */
+        
         .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #eee;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 24px;
-            border-bottom: 1px solid #eeeeee;
-            background-color: #ffffff;
         }
-
+        
         .modal-title {
             margin: 0;
             font-size: 20px;
-            font-weight: 700;
-            color: #1a1a1a;
+            color: #222;
+            font-weight: bold;
         }
-
+        
         .modal-close-btn {
             background: none;
             border: none;
             font-size: 18px;
+            color: #888;
             cursor: pointer;
-            color: #999999;
-            transition: color 0.2s;
         }
-
-        .modal-close-btn:hover {
-            color: #333333;
-        }
-
-        /* 본문 내용 영역 */
+        
         .modal-body {
             padding: 24px;
         }
-
-        /* 상단 액션 바 (닫기, 다시 평가하기 등 버튼 영역) */
+        
+        /* 알림 바 및 탭 영역 기본 설정 */
+        .ai-pre-evaluation-popup {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
         .ai-pre-evaluation-action-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #f1f3f5;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
             gap: 12px;
+            background: #f1f3f5;
+            padding: 12px 16px;
+            border-radius: 8px;
             flex-wrap: wrap;
         }
-
-        .ai-pre-evaluation-action-bar__left {
-            flex: 1;
-            min-width: 250px;
-        }
-
+        
         .ai-preeval-notice {
             font-size: 13px;
             color: #495057;
             line-height: 1.5;
         }
-
-        /* 버튼 기본 스타일 */
-        .ai-preeval-btn-close {
-            background: #ffffff;
-            border: 1px solid #ced4da;
-            padding: 10px 16px;
+        
+        .ai-preeval-btn-close, .ai-preeval-btn-primary {
+            padding: 8px 16px;
             border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: bold;
             cursor: pointer;
+            border: none;
+        }
+        
+        .ai-preeval-btn-close {
+            background: #e9ecef;
             color: #495057;
-            transition: all 0.2s;
         }
-
-        .ai-preeval-btn-close:hover {
-            background: #f8f9fa;
-        }
-
+        
         .ai-preeval-btn-primary {
             background: #2e7d32;
-            border: none;
-            color: white;
-            padding: 10px 16px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
+            color: #ffffff;
         }
-
+        
         .ai-preeval-btn-primary:hover {
             background: #1b5e20;
         }
@@ -125,7 +107,7 @@
 </head>
 <body>
 
-    <!-- 따오신 HTML 구조 시작 -->
+    <!-- 원본 모달 콘텐츠 시작 -->
     <div class="modal-content large">
         <div class="modal-header">
             <h2 class="modal-title">네이토 사전평가</h2>
@@ -144,9 +126,10 @@
                             <button type="button" class="ai-preeval-btn-close">닫기</button>
                             <button type="button" class="ai-preeval-btn-primary">다시 평가하기 (남은 2회)</button>
                         </div>
-                        <div class="ai-pre-evaluation-tab-header" style="display: flex; flex-wrap: nowrap; overflow: auto hidden; border-bottom: 1px solid rgb(224, 224, 224); margin-bottom: 16px; scrollbar-width: thin;">
+                        <div class="ai-pre-evaluation-tab-header" style="display: flex; flex-wrap: nowrap; overflow: auto hidden; border-bottom: 1px solid rgb(224, 224, 224); margin-bottom: 16px; scrollbar-width: thin; margin-top: 16px;">
                             <button type="button" style="padding: 10px 14px; background: none; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor rgb(46, 125, 50); border-image: initial; color: rgb(46, 125, 50); font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; flex-shrink: 0; white-space: nowrap; min-width: 0px;">
-                                <span>시도 1(14/15)</span><span style="font-size: 14px;">✓</span>
+                                <span>시도 1(14/15)</span>
+                                <span style="font-size: 14px;">✓</span>
                             </button>
                         </div>
                     </div>
@@ -172,7 +155,7 @@
                             <div>
                                 <h4 style="margin: 0px 0px 12px; font-size: 14px; color: rgb(25, 118, 210);">항목별 평가 (15개)</h4>
                                 <ul style="list-style: none; padding: 0px; margin: 0px;">
-                                    <!-- 평가 항목 #1 -->
+                                    <!-- 항목 1 -->
                                     <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
                                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
                                             <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
@@ -189,8 +172,7 @@
                                             <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">타겟·입력·출력 요약을 1페이지 템플릿 형태로 추가하여 빠르게 참조 가능하게 하세요.</dd>
                                         </dl>
                                     </li>
-
-                                    <!-- 평가 항목 #2 -->
+                                    <!-- 항목 2 -->
                                     <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
                                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
                                             <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
@@ -207,8 +189,194 @@
                                             <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">채널별(내부/외부/거래처)로 변형된 2~3가지 복사형 템플릿을 추가하세요.</dd>
                                         </dl>
                                     </li>
-
-                                    <!-- 잘렸던 마지막 평가 항목 #14 부분 보완 완료 -->
+                                    <!-- 항목 3 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #3</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">README.md &gt; '1. 서로 다른 모델 선정: Gemini 3.1 pro, Claude sonnet 4.6, GPT 5.4'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">최소 3종 모델을 명시하고 동일 입력·평가축으로 비교한 점이 충실함.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">평가 시 사용한 구체적 프롬프트 원문(복사본)을 명시하면 재현성이 더 좋아짐.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">비교에 사용한 정확한 입력 텍스트(원문)를 별도 파일로 첨부하세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 4 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #4</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">Mission_B1-1.txt &gt; 'Step 7. 모범 답안 샘플 3개 (Few-shot)'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">최소 3개의 Few-shot 예시(모범입출력, 모호케이스 포함)를 제공함.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">각 예시에 대해 왜 좋은지(평가기준과 연결된 근거)를 더 간결히 표기하면 교육적 효과가 큼.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">각 Few-shot 예시 옆에 1~2줄의 품질 판단 근거를 추가하세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 5 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #5</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">Mission_B1-1.txt &gt; '## 함정 질문 5개'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">환각검증용 5문항과 Pass/Fail 기준 및 근거를 구체적으로 제시함.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">검증 결과를 모델별 표 형태로 요약하면 비교성이 개선됨.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">각 문항의 모델별 응답 예시와 판정표를 표로 정리해 첨부하세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 6 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #6</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">Mission_B1-1.txt &gt; 'Step 12: 대화 10번 이상 주고 받기'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">10턴 이상 대화 로그와 중간 조건 변경·문맥유지 검증을 실제로 수행해 기록함.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">원본(원문) 로그 파일 위치·파일명 표기가 README에 명확하면 재현성이 더 좋아짐.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">원본 로그(Raw Chat History.md)의 파일 경로와 요약 매핑을 README에 명시하세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 7 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #7</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">Mission_B1-1.txt &gt; '[역할과 목표]'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">시스템(페르소나) 규칙과 유저 템플릿을 분리하여 명확히 표기함.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">시스템/유저 프롬프트 예시(복사본)를 각각 파일로 분리하면 배포 편의성이 증가함.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">시스템·유저 프롬프트를 별도 텍스트 파일로 저장해 배포용으로 제공하세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 8 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #8</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">Mission_B1-1.txt &gt; 'Step 8 고치기 전/후 (v1 → v2)'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">v1→v2 개선 이력과 변경 근거 및 성능 차이를 서술하여 개선 과정이 재현 가능함.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">v2 적용 전/후의 정량적 성능 비교(예: 점수 변화 표)가 더 명확하면 설득력이 커짐.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">v1/v2에 대해 동일 테스트 케이스에 대한 점수표를 추가해 비교하세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 9 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #9</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">README.md &gt; '5. **평가 축 (6개)**'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">평가축 기반으로 점수화·근거 제시·최종선정까지 구조화하여 제시함.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">평가 산식(가중치)이나 합산 방법이 명시되지 않아 최종 점수 산출 근거가 모호함.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">평가축별 가중치와 총점 산출 방식을 명시하여 점수 산출 근거를 명확히 하세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 10 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #10</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">Mission_B1-1.txt &gt; '사실/수치/정책/계산처럼 정답 또는 검증 가능한 근거가 있어야 하는 질문에서, 근거 없이 틀린 정보를 확신하는 답변'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">환각 정의를 사실·수치·정책 등 검증 가능한 항목 기준으로 명확히 설명함.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">창작(허구)와 환각의 경계 사례를 더 구체적 예시로 보강하면 이해가 쉬움.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">환각 vs 허구 판단을 위한 2~3개의 구체적 사례를 추가 제시하세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 11 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #11</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">Mission_B1-1.txt &gt; '합격(통과) 기준(둘 중 하나라도 충족하면 Pass)'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">Pass/Fail 판정 기준(A/B)과 불합격 조건을 구체적으로 정의함.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">판정 체크리스트 형태(체크박스)가 있으면 심사 일관성이 더 좋아짐.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">각 판정기준을 체크리스트 형식으로 변환해 심사용 표준지를 만드세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 12 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #12</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">README.md &gt; '최종 결론: 본 프로젝트의 메일 답장 자동화 과업에 가장 최적화된 모델은 Claude sonnet 4.6으로'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">모델 선정 근거를 업무 연계성·정확성·속도 측면에서 논리적으로 제시함.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">비용·운영환경(예: API 제약)의 정량적 비교가 더 보강되면 선정타당성이 강화됨.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">비용(요금제)·운영 제약을 표로 정리해 선정 근거에 포함시키세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 13 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #13</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">Mission_B1-1.txt &gt; '무료 AI만 쓴다면: 나는 짧은 입력 한도로 품질을 지키기 위해서 지침을 핵심 규칙만 압축해서'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">무료 모델 운영 시 품질유지·프롬프트 단축·검증 절차를 언급한 운영전략이 포함됨.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">구체적 검증 루틴(주기·샘플수 등)이 부족해 운영 시 일관성 확보가 어려움.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">무료 모델용 간소 검증 루틴(예: 주간 샘플 10건 검토)을 구체적으로 명세하세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 14 (FAIL) -->
                                     <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(239, 154, 154) rgb(239, 154, 154) rgb(239, 154, 154) rgb(198, 40, 40); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
                                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
                                             <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(198, 40, 40); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">FAIL</span>
@@ -216,11 +384,30 @@
                                         </div>
                                         <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
                                             <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
-                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">Mission_B1-1.txt &gt; '운영 전략 수립 실패'</dd>
-                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">미흡점</dt>
-                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">정책변경 시 롤백 계획 및 안정성 대책 수립이 누락되었습니다.</dd>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">Mission_B1-1.txt &gt; 'Step 8 고치기 전/후 (v1 → v2)'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">프롬프트 버전 관리(v1→v2)와 개선 근거는 문서화되어 있음.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">운영버전관리·검증루틴은 일부 제시되었으나 명시적 '롤백 절차'와 배포·테스트 기반의 운영 프로세스가 누락됨.</dd>
                                             <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
-                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">롤백 시나리오와 운영 모니터링 방안을 명문화하여 파일에 기록하세요.</dd>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">변경시 버전 태깅·자동화 테스트·명시적 롤백 절차(언제·누가 돌려놓는지)를 문서화하세요.</dd>
+                                        </dl>
+                                    </li>
+                                    <!-- 항목 15 -->
+                                    <li style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 4px; border-style: solid; border-color: rgb(165, 214, 167) rgb(165, 214, 167) rgb(165, 214, 167) rgb(46, 125, 50); border-image: initial; border-radius: 6px; padding: 12px; margin-bottom: 8px; box-sizing: border-box; max-width: 100%; min-width: 0px; overflow: hidden;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; min-width: 0px;">
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgb(46, 125, 50); color: rgb(255, 255, 255); font-size: 11px; font-weight: bold;">PASS</span>
+                                            <strong style="font-size: 13px; color: rgb(51, 51, 51);">평가 항목 #15</strong>
+                                        </div>
+                                        <dl style="margin: 0px; font-size: 13px; color: rgb(68, 68, 68); line-height: 1.55; display: grid; grid-template-columns: minmax(64px, max-content) minmax(0px, 1fr); gap: 4px 10px; max-width: 100%; min-width: 0px;">
+                                            <dt style="color: rgb(21, 101, 192); font-weight: 600; white-space: nowrap;">근거</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">Mission_B1-1.txt &gt; '대화가 길어져 앞을 잊는다면: 나는 각 AI 모델마다 서비스되는 메모리 기능(e.g. 제미나이 잼스, 클로드 프로젝트 등)을 적극 확용하겠다.'</dd>
+                                            <dt style="color: rgb(46, 125, 50); font-weight: 600; white-space: nowrap;">잘한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">프롬프트 블록·요약 체크·메모리 전략(Projects 등)을 명시하여 문맥끊김 개선 방안을 제시함.</dd>
+                                            <dt style="color: rgb(198, 40, 40); font-weight: 600; white-space: nowrap;">부족한 점</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">요약 빈도·요약 길이 기준(예: 3턴마다 1회·요약 최대 200자)이 없어서 운영 시 편차 가능.</dd>
+                                            <dt style="color: rgb(106, 27, 154); font-weight: 600; white-space: nowrap;">보완</dt>
+                                            <dd style="display: block; margin: 0px; min-width: 0px; max-width: 100%; color: rgb(34, 34, 34); overflow-wrap: anywhere; word-break: break-word;">문맥 요약 주기와 요약 포맷(한줄 요약/키워드)을 규정해 일관성 있게 적용하세요.</dd>
                                         </dl>
                                     </li>
                                 </ul>
@@ -231,7 +418,7 @@
             </div>
         </div>
     </div>
-    <!-- 따오신 HTML 구조 끝 -->
+    <!-- 원본 모달 콘텐츠 끝 -->
 
 </body>
 </html>
